@@ -31,7 +31,7 @@ export function HomeIndex() {
                 <div className="card-body">
                     <h5 className="card-title text-center">Join Room</h5>
                     <div className="form-group">
-                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Email" id="txtMail" />
+                        <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="UserName" id="txtMail" />
                     </div>
                     <div className="form-group">
                         <input type="text" value={roomId} onChange={(e) => setRoomId(e.target.value)} className="form-control" placeholder="Room Id" id="txtRoomId" />

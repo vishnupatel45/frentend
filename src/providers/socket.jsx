@@ -10,7 +10,7 @@ export const useSocket =() =>{
 
 export const SocketProvider = (props) =>{
         const socket = useMemo(
-            ()=> io('http://localhost:8001',[])
+            ()=> io('https://backend-o707.onrender.com',[])
         );
         return (
             <soctectConetion.Provider value={{socket}}>
