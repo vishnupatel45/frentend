@@ -27,10 +27,11 @@ export function RoomPage() {
             if (myVideoRef.current) {
                 myVideoRef.current.srcObject = stream;
             }
+            sendStream(stream); // Send the stream to the peer connection
         } catch (error) {
             handleError(error);
         }
-    }, [handleError]);
+    }, [handleError, sendStream]);
 
     useEffect(() => {
         requestMediaAccess();
@@ -38,10 +39,9 @@ export function RoomPage() {
 
     const handleStartMeeting = useCallback(() => {
         if (myStream) {
-            sendStream(myStream);
-            socket.emit('start-meeting', { stream: myStream });
+            socket.emit('start-meeting');
         }
-    }, [myStream, sendStream, socket]);
+    }, [myStream, socket]);
 
     useEffect(() => {
         const handleUserJoin = async (data) => {
@@ -114,19 +114,18 @@ export function RoomPage() {
                 <div className="video-container">
                     <div className="video-wrapper">
                         <h5>My Video</h5>
-                        <video ref={myVideoRef} autoPlay playsInline className="video" />
+                        <video ref={myVideoRef} autoPlay playsInline muted className="video" />
+                    </div>
+                    <div className="video-wrapper">
+                        <h5>Remote Video</h5>
+                        <video ref={remoteVideoRef} autoPlay playsInline className="video" />
                     </div>
                 </div>
-                {/* {!callAccepted && (
-                    <div className="text-center">
-                        <button className="btn btn-primary" onClick={handleStartMeeting}>Start Live Meeting</button>
-                    </div>
-                )} */}
                 <div className="chat-container">
                     <div className="messages">
                         {messages.map((msg, index) => (
                             <div key={index} className={`message ${msg.sender}`}>
-                                <span>{msg.message}</span>
+                                <span><strong>{msg.sender === 'me' ? 'Me' : remoteId}: </strong>{msg.message}</span>
                             </div>
                         ))}
                     </div>

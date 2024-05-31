@@ -1,68 +1,57 @@
-.room-page {
-    padding: 20px;
-}
-
-.video-container {
+.room-page .video-container {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
-.container{
-    width: 75%;
-    height: 100vh;
-}
-
-.video-wrapper {
-    text-align: center;
-}
-
-.video {
-    width: 500px;
-    height: 400px;
-    background-color: white;
-    box-shadow: rgb(161, 155, 155);
-    border-radius: 10px;
-}
-
-.chat-container {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.messages {
-    max-height: 200px;
-    overflow-y: auto;
-    margin-bottom: 10px;
-}
-
-.message {
-    padding: 5px;
-    margin: 5px 0;
-}
-
-.message.me {
-    text-align: right;
-    background-color: #d1ffd1;
-}
-
-.message.them {
-    text-align: left;
-    background-color: #ffd1d1;
-}
-
-.message-input {
+.room-page .video-wrapper {
     display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.message-input input {
-    flex: 1;
+.room-page .video {
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: black;
+}
+
+.room-page .chat-container {
+    margin-top: 20px;
+}
+
+.room-page .messages {
+    border: 1px solid #ccc;
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+.room-page .message {
+    margin-bottom: 10px;
     padding: 5px;
+    border-radius: 5px;
+    background-color: #f1f1f1;
 }
 
-.message-input button {
-    padding: 5px 10px;
+.room-page .message.me {
+    text-align: right;
+    background-color: #d4edda;
+}
+
+.room-page .message.them {
+    text-align: left;
+    background-color: #f8d7da;
+}
+
+.room-page .message-input {
+    display: flex;
+    margin-top: 10px;
+}
+
+.room-page .message-input input {
+    flex-grow: 1;
+    margin-right: 10px;
 }
