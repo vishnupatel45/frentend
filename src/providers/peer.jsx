@@ -1,60 +1,3 @@
-// import React, { useCallback, useEffect, useMemo, useState } from "react";
-
-// const peerContext = React.createContext(null);
-
-// export const usePeer = () => React.useContext(peerContext);
-
-// export const PeerProvider = (props) => {
-//     // const configuration = {
-//     //     iceServers: [
-//     //         { urls: 'stun:stun.l.google.com:19302' },
-//     //         { urls: 'stun:stun.services.mozilla.com' }
-//     //     ],
-//     // };
-//     const Peer = useMemo(() => new RTCPeerConnection(), []);
-//     const [remoteStream,setremoteStream] = useState(null);
-
-//     const createOffer = async () => {
-//         const offer = await Peer.createOffer();
-//         await Peer.setLocalDescription(offer);
-//         return offer;
-//     }
-//     const createAnswer =async (offer) =>{
-//         await Peer.setRemoteDescription(offer);
-//         const answer = await Peer.createAnswer();
-//         await Peer.setLocalDescription(answer);
-//         return answer;
-//     }
-
-//     const setRemoteans = async(ans)=>{
-//         await Peer.setRemoteDescription(ans);
-//     };
-//     const sendStream = async (stream) =>{
-//         const tracks = stream.getTracks();
-//         for(const track of tracks){
-//             Peer.addTrack(track,stream);
-//         }
-//     };
-
-//     const handileTrackEvent = useCallback((ev)=>{
-//         const streams = ev.streams;
-//         setremoteStream(streams[0])
-//     },[]);
-
-//     useEffect(()=>{
-//         Peer.addEventListener('track',handileTrackEvent);
-//         return() =>{
-//             Peer.removeEventListener('track',handileTrackEvent);
-//         }
-//     },[Peer,handileTrackEvent])
-     
-
-//     return (
-//         <peerContext.Provider value={{Peer, createOffer, createAnswer, setRemoteans,sendStream, remoteStream}}>
-//             {props.children}
-//         </peerContext.Provider>
-//     );
-// };
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 const peerContext = React.createContext(null);
@@ -68,7 +11,7 @@ export const PeerProvider = (props) => {
             { urls: 'stun:stun.services.mozilla.com' }
         ],
     }), []);
-    
+
     const [remoteStream, setRemoteStream] = useState(null);
 
     const createOffer = async () => {
@@ -78,26 +21,30 @@ export const PeerProvider = (props) => {
     };
 
     const createAnswer = async (offer) => {
-        await Peer.setRemoteDescription(offer);
+        await Peer.setRemoteDescription(new RTCSessionDescription(offer));
         const answer = await Peer.createAnswer();
         await Peer.setLocalDescription(answer);
         return answer;
     };
+    
 
+    // const setRemoteans = async (ans) => {
+    //     await Peer.setRemoteDescription(new RTCSessionDescription(ans));
+    // };
     const setRemoteans = async (ans) => {
-        await Peer.setRemoteDescription(ans);
-    };
-
-    const sendStream = async (stream) => {
-        const tracks = stream.getTracks();
-        for (const track of tracks) {
-            Peer.addTrack(track, stream);
+        // Assuming you have a peer connection named peerConnection
+        await Peer.setRemoteDescription(new RTCSessionDescription(ans));
+        Peer.ontrack = (event) => {
+            setRemoteStream(event.streams[0]);
         }
+    }
+
+    const sendStream = (stream) => {
+        stream.getTracks().forEach(track => Peer.addTrack(track, stream));
     };
 
-    const handleTrackEvent = useCallback((ev) => {
-        const streams = ev.streams;
-        setRemoteStream(streams[0]);
+    const handleTrackEvent = useCallback((event) => {
+        setRemoteStream(event.streams[0]);
     }, []);
 
     useEffect(() => {
@@ -108,7 +55,7 @@ export const PeerProvider = (props) => {
     }, [Peer, handleTrackEvent]);
 
     return (
-        <peerContext.Provider value={{ Peer, createOffer, createAnswer, setRemoteans, sendStream, remoteStream }}>
+        <peerContext.Provider value={{ createOffer, createAnswer, setRemoteans, sendStream, remoteStream }}>
             {props.children}
         </peerContext.Provider>
     );
