@@ -11,7 +11,7 @@ export const PeerProvider = (props) => {
             { urls: 'stun:stun.services.mozilla.com' }
         ],
     }), []);
-
+    
     const [remoteStream, setRemoteStream] = useState(null);
 
     const createOffer = async () => {
@@ -21,29 +21,26 @@ export const PeerProvider = (props) => {
     };
 
     const createAnswer = async (offer) => {
-        await Peer.setRemoteDescription(new RTCSessionDescription(offer));
+        await Peer.setRemoteDescription(offer);
         const answer = await Peer.createAnswer();
         await Peer.setLocalDescription(answer);
         return answer;
     };
 
     const setRemoteans = async (ans) => {
-        await Peer.setRemoteDescription(new RTCSessionDescription(ans));
-    };
-    // const setRemoteans = async (ans) => {
-    //     // Assuming you have a peer connection named peerConnection
-    //     await Peer.setRemoteDescription(new RTCSessionDescription(ans));
-    //     Peer.ontrack = (event) => {
-    //         setRemoteStream(event.streams[0]);
-    //     }
-    // }
-
-    const sendStream = (stream) => {
-        stream.getTracks().forEach(track => Peer.addTrack(track, stream));
+        await Peer.setRemoteDescription(ans);
     };
 
-    const handleTrackEvent = useCallback((event) => {
-        setRemoteStream(event.streams[0]);
+    const sendStream = async (stream) => {
+        const tracks = stream.getTracks();
+        for (const track of tracks) {
+            Peer.addTrack(track, stream);
+        }
+    };
+
+    const handleTrackEvent = useCallback((ev) => {
+        const streams = ev.streams;
+        setRemoteStream(streams[0]);
     }, []);
 
     useEffect(() => {
@@ -54,7 +51,7 @@ export const PeerProvider = (props) => {
     }, [Peer, handleTrackEvent]);
 
     return (
-        <peerContext.Provider value={{ createOffer, createAnswer, setRemoteans, sendStream, remoteStream }}>
+        <peerContext.Provider value={{ Peer, createOffer, createAnswer, setRemoteans, sendStream, remoteStream }}>
             {props.children}
         </peerContext.Provider>
     );

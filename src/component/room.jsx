@@ -55,16 +55,16 @@ export function RoomPage() {
         const handleIncomingCall = async (data) => {
             const { from, offer } = data;
             console.log('Incoming call:', from, offer);
-            const answer = await createAnswer(offer);
-            socket.emit('call-accepted', { email: from, answer });
+            const ans = await createAnswer(offer);
+            socket.emit('call-accepted', { email: from, ans });
             setRemoteId(from);
             setCallAccepted(true);
         };
 
         const handleCallAccepted = async (data) => {
-            const { answer } = data;
-            console.log('Call got accepted:', answer);
-            await setRemoteans(answer);
+            const { ans } = data;
+            console.log('Call got accepted:', ans);
+            await setRemoteans(ans);
             setCallAccepted(true);
         };
 
