@@ -26,18 +26,17 @@ export const PeerProvider = (props) => {
         await Peer.setLocalDescription(answer);
         return answer;
     };
-    
 
-    // const setRemoteans = async (ans) => {
-    //     await Peer.setRemoteDescription(new RTCSessionDescription(ans));
-    // };
     const setRemoteans = async (ans) => {
-        // Assuming you have a peer connection named peerConnection
         await Peer.setRemoteDescription(new RTCSessionDescription(ans));
-        Peer.ontrack = (event) => {
-            setRemoteStream(event.streams[0]);
-        }
-    }
+    };
+    // const setRemoteans = async (ans) => {
+    //     // Assuming you have a peer connection named peerConnection
+    //     await Peer.setRemoteDescription(new RTCSessionDescription(ans));
+    //     Peer.ontrack = (event) => {
+    //         setRemoteStream(event.streams[0]);
+    //     }
+    // }
 
     const sendStream = (stream) => {
         stream.getTracks().forEach(track => Peer.addTrack(track, stream));
